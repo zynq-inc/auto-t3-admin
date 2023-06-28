@@ -1,0 +1,95 @@
+:root {
+  --theme-scale1: var(--violet1);
+  --theme-scale2: var(--violet2);
+  --theme-scale3: var(--violet3);
+  --theme-scale4: var(--violet4);
+  --theme-scale5: var(--violet5);
+  --theme-scale6: var(--violet6);
+  --theme-scale7: var(--violet7);
+  --theme-scale8: var(--violet8);
+  --theme-scale9: var(--violet9);
+  --theme-scale10: var(--violet10);
+  --theme-scale11: var(--violet11);
+  --theme-scale12: var(--violet12);
+
+  color: var(--gray12);
+  background-color: var(--gray1);
+}
+
+.page-container {
+  margin-inline-end: 2rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.entry {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.entry-list {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.common-input {
+  width: 100%;
+  padding-inline-start: 0.75rem;
+  height: 3rem;
+}
+
+.nullable-label {
+  margin-inline-end: 0.5rem;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  height: 3rem;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--grass5);
+  color: grey;
+}
+
+.nullable-label:hover {
+  background-color: var(--grass3);
+}
+
+.nullable-label:has(input:checked) {
+  background-color: var(--grass9);
+  color: white;
+  font-weight: bold;
+}
+
+.nullable-label:hover:has(input:checked) {
+  background-color: var(--grass8);
+}
+
+.nullable-checkbox {
+  display: none;
+}
+
+.nullable-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.view-reference {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}

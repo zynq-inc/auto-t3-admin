@@ -1,0 +1,28 @@
+.container {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.container:has([aria-expanded="false"]) {
+  margin-inline: 0;
+}
+
+.item {
+  background-color: var(--theme-scale9);
+  color: white;
+  padding-inline: 1rem;
+  padding-block: 0.5rem;
+  padding-inline-end: 2rem;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.item[aria-current="true"] {
+  text-decoration: double underline;
+}
+
+.item:hover {
+  background-color: var(--theme-scale8);
+}

@@ -1,0 +1,104 @@
+:root {
+  --theme-scale1: var(--violet1);
+  --theme-scale2: var(--violet2);
+  --theme-scale3: var(--violet3);
+  --theme-scale4: var(--violet4);
+  --theme-scale5: var(--violet5);
+  --theme-scale6: var(--violet6);
+  --theme-scale7: var(--violet7);
+  --theme-scale8: var(--violet8);
+  --theme-scale9: var(--violet9);
+  --theme-scale10: var(--violet10);
+  --theme-scale11: var(--violet11);
+  --theme-scale12: var(--violet12);
+
+  color: var(--gray12);
+  background-color: var(--gray1);
+}
+
+.info {
+  --theme-scale1: var(--blue1);
+  --theme-scale2: var(--blue2);
+  --theme-scale3: var(--blue3);
+  --theme-scale4: var(--blue4);
+  --theme-scale5: var(--blue5);
+  --theme-scale6: var(--blue6);
+  --theme-scale7: var(--blue7);
+  --theme-scale8: var(--blue8);
+  --theme-scale9: var(--blue9);
+  --theme-scale10: var(--blue10);
+  --theme-scale11: var(--blue11);
+  --theme-scale12: var(--blue12);
+}
+
+.success {
+  --theme-scale1: var(--grass1);
+  --theme-scale2: var(--grass2);
+  --theme-scale3: var(--grass3);
+  --theme-scale4: var(--grass4);
+  --theme-scale5: var(--grass5);
+  --theme-scale6: var(--grass6);
+  --theme-scale7: var(--grass7);
+  --theme-scale8: var(--grass8);
+  --theme-scale9: var(--grass9);
+  --theme-scale10: var(--grass10);
+  --theme-scale11: var(--grass11);
+  --theme-scale12: var(--grass12);
+}
+
+.warning {
+  --theme-scale1: var(--orange1);
+  --theme-scale2: var(--orange2);
+  --theme-scale3: var(--orange3);
+  --theme-scale4: var(--orange4);
+  --theme-scale5: var(--orange5);
+  --theme-scale6: var(--orange6);
+  --theme-scale7: var(--orange7);
+  --theme-scale8: var(--orange8);
+  --theme-scale9: var(--orange9);
+  --theme-scale10: var(--orange10);
+  --theme-scale11: var(--orange11);
+  --theme-scale12: var(--orange12);
+}
+
+.error {
+  --theme-scale1: var(--red1);
+  --theme-scale2: var(--red2);
+  --theme-scale3: var(--red3);
+  --theme-scale4: var(--red4);
+  --theme-scale5: var(--red5);
+  --theme-scale6: var(--red6);
+  --theme-scale7: var(--red7);
+  --theme-scale8: var(--red8);
+  --theme-scale9: var(--red9);
+  --theme-scale10: var(--red10);
+  --theme-scale11: var(--red11);
+  --theme-scale12: var(--red12);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  background-color: var(--theme-scale3);
+  color: var(--theme-scale12);
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.icon {
+  color: var(--theme-scale10);
+  height: 1.5em;
+  width: 1.5em;
+  margin-inline-end: 1rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.title {
+  font-weight: bold;
+  color: var(--theme-scale12);
+}

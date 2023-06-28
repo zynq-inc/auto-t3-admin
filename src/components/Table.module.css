@@ -1,0 +1,89 @@
+:root {
+  --theme-scale1: var(--violet1);
+  --theme-scale2: var(--violet2);
+  --theme-scale3: var(--violet3);
+  --theme-scale4: var(--violet4);
+  --theme-scale5: var(--violet5);
+  --theme-scale6: var(--violet6);
+  --theme-scale7: var(--violet7);
+  --theme-scale8: var(--violet8);
+  --theme-scale9: var(--violet9);
+  --theme-scale10: var(--violet10);
+  --theme-scale11: var(--violet11);
+  --theme-scale12: var(--violet12);
+
+  color: var(--gray12);
+  background-color: var(--gray1);
+}
+
+.page-container {
+  display: flex;
+}
+
+.table {
+  border-collapse: collapse;
+}
+
+.table-stack {
+  display: flex;
+  flex-direction: column;
+  margin-block: 1rem;
+}
+
+.cell {
+  color: black;
+  border: 1px solid #dddfe1;
+  padding: 15px;
+}
+
+.header-cell {
+  background-color: var(--violet9);
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 13px;
+  border: 1px solid var(--violet8);
+  padding: 15px;
+}
+
+.row {
+  background-color: #f9fafb;
+}
+
+.row:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.new {
+  color: var(--violet9);
+  text-decoration: none;
+  background-color: white;
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+
+.new:hover {
+  background-color: var(--violet4);
+}
+
+.pagination {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  padding-inline: 0.5rem;
+}
+
+.pagination-button {
+  cursor: pointer;
+  width: 2rem;
+  text-align: center;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+  background-color: var(--violet3);
+  border: 1px solid var(--violet7);
+}
+
+[aria-current="page"] > .pagination-button {
+  font-weight: bold;
+  background-color: var(--violet9);
+  color: white;
+}

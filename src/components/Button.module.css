@@ -1,0 +1,172 @@
+.base {
+  align-items: center;
+  appearance: none;
+  background-color: var(--theme-scale1);
+  border-radius: 500px;
+  border: 2px solid var(--theme-scale11);
+  box-shadow: var(--blackA4) 0 2px 4px, var(--blackA3) 0 7px 13px -3px;
+  box-sizing: border-box;
+  color: var(--theme-scale11);
+  cursor: pointer;
+  display: inline-flex;
+  height: 48px;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding: 0 2rem;
+  position: relative;
+  text-align: start;
+  text-decoration: none;
+  transition: box-shadow 0.15s, transform 0.15s;
+  user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow, transform;
+  font-weight: 500;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.base:disabled {
+  border-color: var(--gray4);
+  color: var(--gray8);
+  pointer-events: none;
+}
+
+.base:focus {
+  box-shadow: var(--blackA5) 0 2px 4px, var(--blackA4) 0 7px 13px -3px,
+    var(--blackA3) 0 -3px 0 inset;
+}
+
+.base:hover {
+  box-shadow: var(--blackA6) 0 4px 8px, var(--blackA5) 0 7px 13px -3px;
+  transform: translateY(-2px);
+}
+
+.base:active {
+  background-color: var(--theme-scale3);
+  transform: translateY(2px);
+}
+
+.secondary {
+  align-items: center;
+  appearance: none;
+  border-radius: 500px;
+  color: var(--theme-scale11);
+  cursor: pointer;
+  display: inline-flex;
+  height: 48px;
+  justify-content: center;
+  font-size: 0.85rem;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding: 0 2rem;
+  position: relative;
+  text-align: start;
+  text-decoration: underline;
+  user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow, transform;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.secondary:disabled {
+  color: var(--gray8);
+  pointer-events: none;
+}
+
+.secondary:hover {
+  color: var(--theme-scale9);
+}
+
+.secondary:active {
+  color: var(--theme-scale9);
+  transform: translateY(2px);
+}
+
+.icon {
+  align-items: center;
+  appearance: none;
+  border-radius: 50%;
+  border-width: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  height: 48px;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  text-align: start;
+  text-decoration: none;
+  transition: box-shadow 0.15s, transform 0.15s;
+  user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow, transform;
+  font-size: 18px;
+  color: var(--theme-scale11);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon:hover {
+  transform: translateY(-2px);
+}
+
+.icon:active {
+  opacity: 0.7;
+  transform: translateY(2px);
+}
+
+/* Adapted from https://codepen.io/MauriciAbad/pen/WNrpmPr */
+
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+.base[data-loading="true"] {
+  --border-radius: 500px;
+  --border-size: 2px;
+  --padding: 2rem;
+
+  border-width: 0;
+  position: relative;
+  overflow: hidden;
+  padding: var(--border-size) calc(var(--padding) + var(--border-size));
+  border-radius: var(--border-radius);
+  display: inline-flex;
+}
+
+.base[data-loading="true"]::before {
+  content: "";
+  display: block;
+  background: conic-gradient(var(--theme-scale4), var(--theme-scale8));
+  width: calc(100% * 1.41421356237);
+  padding-bottom: calc(100% * 1.41421356237);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  z-index: -2;
+  animation: spin 3s linear infinite;
+}
+
+.base[data-loading="true"]::after {
+  content: "";
+  position: absolute;
+  inset: var(--border-size);
+  background: white;
+  z-index: -1;
+  border-radius: calc(var(--border-radius) - var(--border-size));
+}
