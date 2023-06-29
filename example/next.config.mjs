@@ -9,6 +9,7 @@ await import("./src/env.mjs");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  // Workaround for local dev, you don't need to do this: https://github.com/facebook/react/issues/14257#issuecomment-1104331625
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
