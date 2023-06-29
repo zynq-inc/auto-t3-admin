@@ -12,7 +12,7 @@ import { prisma } from "~/server/db";
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   autoAdmin: createTRPCRouter(
-    createAdminRouter(publicProcedure, Prisma.ModelName, prisma)
+    await createAdminRouter(publicProcedure, Prisma.ModelName, prisma)
   ),
 });
 

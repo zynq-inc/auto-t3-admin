@@ -2,24 +2,13 @@
   "name": "auto-t3-admin",
   "version": "1.0.0",
   "description": "",
-  "types": "./lib/cjs/types/index.d.ts",
-  "main": "./lib/cjs/index.js",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./lib/esm/types/index.d.ts",
-        "default": "./lib/esm/index.mjs"
-      },
-      "require": {
-        "types": "./lib/cjs/types/index.d.ts",
-        "default": "./lib/cjs/index.js"
-      }
-    }
-  },
+  "main": "dist/auto-t3-admin.js",
+  "module": "dist/auto-t3-admin.mjs",
+  "typings": "dist/auto-t3-admin.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf ./lib",
-    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build": "rollup -c",
     "build:esm": "tsc -p ./configs/tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
     "build:cjs": "tsc -p ./configs/tsconfig.cjs.json",
     "prepack": "npm run build"
@@ -40,24 +29,28 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@prisma/client": "^4.14.0",
+    "@rollup/plugin-typescript": "^11.1.2",
     "@types/luxon": "3",
     "@types/react": "^18",
-    "typescript": "5",
-    "@trpc/client": "^10.26.0",
-    "@trpc/next": "^10.26.0",
-    "@trpc/react-query": "^10.26.0",
+    "esbuild": "^0.18.10",
     "next": "^13.4.2",
-    "@prisma/client": "^4.14.0"
+    "postcss": "^8.4.24",
+    "rollup": "^3.25.3",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "typescript": "5"
   },
   "peerDependencies": {
+    "@prisma/client": "4.12.0",
     "@trpc/client": "^10",
     "@trpc/next": "^10",
     "@trpc/react-query": "^10",
     "@trpc/server": "^10",
     "next": "*",
     "react": "^18",
-    "react-dom": "*",
-    "@prisma/client": "4.12.0"
+    "react-dom": "*"
   },
   "files": [
     "lib/**/*"

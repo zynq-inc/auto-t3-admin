@@ -1,19 +1,19 @@
 :root {
-  --theme-scale1: var(--violet1);
-  --theme-scale2: var(--violet2);
-  --theme-scale3: var(--violet3);
-  --theme-scale4: var(--violet4);
-  --theme-scale5: var(--violet5);
-  --theme-scale6: var(--violet6);
-  --theme-scale7: var(--violet7);
-  --theme-scale8: var(--violet8);
-  --theme-scale9: var(--violet9);
-  --theme-scale10: var(--violet10);
-  --theme-scale11: var(--violet11);
-  --theme-scale12: var(--violet12);
+  --theme-scale1: hsl(255, 65%, 99.4%);
+  --theme-scale2: hsl(252, 100%, 99%);
+  --theme-scale3: hsl(252, 96.9%, 97.4%);
+  --theme-scale4: hsl(252, 91.5%, 95.5%);
+  --theme-scale5: hsl(252, 85.1%, 93%);
+  --theme-scale6: hsl(252, 77.8%, 89.4%);
+  --theme-scale7: hsl(252, 71%, 83.7%);
+  --theme-scale8: hsl(252, 68.6%, 76.3%);
+  --theme-scale9: hsl(252, 56%, 57.5%);
+  --theme-scale10: hsl(251, 48.1%, 53.5%);
+  --theme-scale11: hsl(250, 43%, 48%);
+  --theme-scale12: hsl(254, 60%, 18.5%);
 
-  color: var(--gray12);
-  background-color: var(--gray1);
+  color: var(--theme-scale12);
+  background-color: var(--theme-scale1);
 }
 
 .page-container {
@@ -37,11 +37,11 @@
 }
 
 .header-cell {
-  background-color: var(--violet9);
+  background-color: var(--theme-scale9);
   color: #ffffff;
   font-weight: bold;
   font-size: 13px;
-  border: 1px solid var(--violet8);
+  border: 1px solid var(--theme-scale8);
   padding: 15px;
 }
 
@@ -54,7 +54,7 @@
 }
 
 .new {
-  color: var(--violet9);
+  color: var(--theme-scale9);
   text-decoration: none;
   background-color: white;
   border-radius: 5px;
@@ -62,7 +62,7 @@
 }
 
 .new:hover {
-  background-color: var(--violet4);
+  background-color: var(--theme-scale4);
 }
 
 .pagination {
@@ -78,12 +78,12 @@
   text-align: center;
   border-radius: 50%;
   aspect-ratio: 1/1;
-  background-color: var(--violet3);
-  border: 1px solid var(--violet7);
+  background-color: var(--theme-scale3);
+  border: 1px solid var(--theme-scale7);
 }
 
 [aria-current="page"] > .pagination-button {
   font-weight: bold;
-  background-color: var(--violet9);
+  background-color: var(--theme-scale9);
   color: white;
 }

@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { HamburgerMenuIcon, Cross2Icon } from "@radix-ui/react-icons";
@@ -6,7 +6,7 @@ import { HamburgerMenuIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { CenteredLoader } from "./Loader";
 import { normalizeQueryParam } from "../util";
 
-import buttonStyles from "zabaan/src/compon ents/Button.module.css";
+import buttonStyles from "./Button.module.css";
 
 import styles from "./ModelsSidebar.module.css";
 import { AutoAdminContext } from "./AutoAdminContext";
@@ -24,7 +24,7 @@ export function useWindowSize() {
     });
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     handleSize();
     addEventListener("resize", handleSize);
     return () => removeEventListener("resize", handleSize);

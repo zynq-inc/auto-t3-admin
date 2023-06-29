@@ -89,7 +89,7 @@ type PrismaInstance<UNCAP_MODEL_NAMES_UNION extends string> = {
 //   _output_out: UnsetMarker;
 //   _meta: TConfig['$types']['meta']
 
-export function createAdminRouter<
+export async function createAdminRouter<
   const MODEL_NAMES_UNION extends string,
   TConfig extends AnyRootConfig = AnyRootConfig
 >(
@@ -105,10 +105,11 @@ export function createAdminRouter<
   ModelNames: { [k in MODEL_NAMES_UNION]: k },
   DB: PrismaInstance<Uncapitalize<MODEL_NAMES_UNION>>
 ) {
+  const DMMF = await (DB as any)._getDmmf();
   const SCHEMA: FullSchema<string> = JSON.parse(
     JSON.stringify({
-      models: (DB as any)._baseDmmf.modelMap,
-      enums: (DB as any)._baseDmmf.datamodel.enums,
+      models: DMMF.modelMap,
+      enums: DMMF.datamodel.enums,
     })
   );
 

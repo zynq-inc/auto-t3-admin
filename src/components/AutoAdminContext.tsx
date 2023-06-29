@@ -9,7 +9,7 @@ type AdminRouter = CreateRouterInner<
   {
     autoAdmin: CreateRouterInner<
       AnyRootConfig,
-      ReturnType<typeof createAdminRouter>
+      Awaited<ReturnType<typeof createAdminRouter>>
     >;
   }
 >;

@@ -11,7 +11,7 @@ import {
 
 import Alert from "./Alert";
 import { CenteredLoader } from "./Loader";
-import buttonStyles from "zabaan/src/components/Button.module.css";
+import buttonStyles from "./Button.module.css";
 import {
   EnumSchema,
   FieldSchema,
@@ -255,7 +255,7 @@ export default function Form<T extends Record<string, any>>(props: {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string>();
 
-  const [formValueInner, setFormValueInner] = useState<T>();
+  const [formValueInner, setFormValueInner] = useState<T>({} as T);
 
   const formValue = props.formValue ?? formValueInner;
   const setFormValue = props.setFormValue ?? setFormValueInner;
@@ -343,11 +343,7 @@ export default function Form<T extends Record<string, any>>(props: {
       <div className={formStyles["actions"]}>
         {isCreate && (
           <button
-            disabled={
-              !formValue ||
-              Object.values(touched).length == 0 ||
-              mutationIsLoading
-            }
+            disabled={!formValue || mutationIsLoading}
             aria-loading={mutationIsLoading}
             className={`primary ${buttonStyles["base"]}`}
             onClick={() => {
