@@ -6,7 +6,7 @@ This is an automatically generated, deployable admin panel designed to be used w
 
 ```
 npm install zynq-inc/auto-t3-admin
-yarn add zynq-inc/auto-t3-admin
+yarn add auto-t3-admin@zynq-inc/auto-t3-admin
 ```
 
 # Usage

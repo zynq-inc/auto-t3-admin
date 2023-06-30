@@ -53,7 +53,7 @@
     "react-dom": "*"
   },
   "files": [
-    "lib/**/*"
+    "dist/"
   ],
   "homepage": "https://github.com/zynq-inc/auto-t3-admin#readme"
 }
