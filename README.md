@@ -47,19 +47,19 @@ customize them however you want.
 src/pages/secret-admin/index.tsx
 
 ```typescript
-import { ModelsSidebar, AutoAdminContext } from "auto-t3-admin";
+import { ModelsSidebar, AutoAdminContextProvider } from "auto-t3-admin";
 import { api } from "~/utils/api";
 
 export default function Index({}) {
   return (
-    <AutoAdminContext.Provider value={api}>
+    <AutoAdminContextProvider value={api}>
       <div style={{ display: "flex" }}>
         <ModelsSidebar />
         <div>
           <h1>ADMIN HOME</h1>
         </div>
       </div>
-    </AutoAdminContext.Provider>
+    </AutoAdminContextProvider>
   );
 }
 ```
@@ -69,17 +69,17 @@ Next is the table view:
 src/pages/secret-admin/resources/\[resource\]/index.ts
 
 ```typescript
-import { ModelsSidebar, SearchTable, AutoAdminContext } from "auto-t3-admin";
+import { ModelsSidebar, SearchTable, AutoAdminContextProvider } from "auto-t3-admin";
 import { api } from "~/utils/api";
 
 export default function Index({}) {
   return (
-    <AutoAdminContext.Provider value={api}>
+    <AutoAdminContextProvider value={api}>
       <div style={{ display: "flex" }}>
         <ModelsSidebar />
         <SearchTable />
       </div>
-    </AutoAdminContext.Provider>
+    </AutoAdminContextProvider>
   );
 }
 ```
@@ -89,17 +89,17 @@ Next is the resource edit view:
 src/pages/secret-admin/resources/\[resource\]/\[uuid\].ts
 
 ```typescript
-import { Form, ModelsSidebar, AutoAdminContext } from "auto-t3-admin";
+import { Form, ModelsSidebar, AutoAdminContextProvider } from "auto-t3-admin";
 import { api } from "~/utils/api";
 
 export default function Index({}) {
   return (
-    <AutoAdminContext.Provider value={api}>
+    <AutoAdminContextProvider value={api}>
       <div style={{ display: "flex" }}>
         <ModelsSidebar />
         <Form />
       </div>
-    </AutoAdminContext.Provider>
+    </AutoAdminContextProvider>
   );
 }
 ```
