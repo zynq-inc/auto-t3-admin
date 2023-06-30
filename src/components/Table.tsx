@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -9,7 +8,7 @@ import { normalizeQueryParam } from "../util";
 import { FieldSchema, ModelSchema } from "../createAdminRouter";
 import { formatTitle } from "./Form";
 import styles from "./Table.module.css";
-import { AutoAdminContext } from "./AutoAdminContext";
+import { useAutoAdminContext } from "./AutoAdminContext";
 
 function displayData(model: ModelSchema, field: FieldSchema, val: unknown) {
   if (field.name == "id") {
@@ -114,9 +113,7 @@ export default function Table<T extends Record<string, unknown>>(props: {
   data: { numPages: number; results: T[] } | undefined;
   addedFields?: { name: string; display: (row: T) => React.ReactNode }[];
 }) {
-  const trpc = useContext(AutoAdminContext);
-  if (!trpc)
-    throw new Error("Please wrap the component in AutoAdminContext.Provider");
+  const trpc = useAutoAdminContext();
 
   const router = useRouter();
   const schemaQuery = trpc.autoAdmin.getSchema.useQuery();

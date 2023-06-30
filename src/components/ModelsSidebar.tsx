@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { HamburgerMenuIcon, Cross2Icon } from "@radix-ui/react-icons";
@@ -9,7 +9,7 @@ import { normalizeQueryParam } from "../util";
 import buttonStyles from "./Button.module.css";
 
 import styles from "./ModelsSidebar.module.css";
-import { AutoAdminContext } from "./AutoAdminContext";
+import { useAutoAdminContext } from "./AutoAdminContext";
 
 export function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
@@ -35,9 +35,7 @@ export function useWindowSize() {
 
 export default function ModelsSidebar({}) {
   const router = useRouter();
-  const trpc = useContext(AutoAdminContext);
-  if (!trpc)
-    throw new Error("Please wrap the component in AutoAdminContext.Provider");
+  const trpc = useAutoAdminContext();
 
   const resourceName = normalizeQueryParam(router.query["resource"]) ?? "";
   const schema = trpc.autoAdmin.getSchema.useQuery();

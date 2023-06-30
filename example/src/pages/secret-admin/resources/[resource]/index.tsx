@@ -1,13 +1,17 @@
-import { ModelsSidebar, SearchTable, AutoAdminContext } from "auto-t3-admin";
+import {
+  ModelsSidebar,
+  SearchTable,
+  AutoAdminContextProvider,
+} from "auto-t3-admin";
 import { api } from "~/utils/api";
 
 export default function Index({}) {
   return (
-    <AutoAdminContext.Provider value={api}>
+    <AutoAdminContextProvider value={api}>
       <div style={{ display: "flex" }}>
         <ModelsSidebar />
         <SearchTable />
       </div>
-    </AutoAdminContext.Provider>
+    </AutoAdminContextProvider>
   );
 }

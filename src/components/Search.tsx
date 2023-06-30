@@ -1,8 +1,8 @@
-import { ChangeEvent, useCallback, useContext } from "react";
+import { ChangeEvent, useCallback } from "react";
 
 import { EnumSchema, FieldSchema, ModelSchema } from "../createAdminRouter";
 import styles from "./Search.module.css";
-import { AutoAdminContext } from "./AutoAdminContext";
+import { useAutoAdminContext } from "./AutoAdminContext";
 
 const isInt = new RegExp(/^-?\d*$/);
 const isFloat = new RegExp(/^-?\d*\.?\d*$/);
@@ -75,9 +75,7 @@ export default function Search(props: {
   setWhereClause: (whereClause: Record<string, unknown> | undefined) => void;
   additionalSearchClauses?: (query: string) => Record<string, unknown>[];
 }) {
-  const trpc = useContext(AutoAdminContext);
-  if (!trpc)
-    throw new Error("Please wrap the component in AutoAdminContext.Provider");
+  const trpc = useAutoAdminContext();
 
   const schemaQuery = trpc.autoAdmin.getSchema.useQuery();
   const fullSchema = schemaQuery.data;

@@ -180,7 +180,7 @@ export async function createAdminRouter<
       .mutation(async (req) => {
         return DB[uncapitalizeTable(req.input.table)].create({
           data: req.input.data,
-        }) as Promise<{ [k: string]: JSON; id: string }>;
+        }) as Promise<{ [k: string]: unknown; id: string }>;
       }),
     deleteResource: adminProcedure
       .input(

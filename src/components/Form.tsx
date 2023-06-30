@@ -2,12 +2,7 @@ import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { UseTRPCQueryResult } from "@trpc/react-query/shared";
 import { DateTime } from "luxon";
 import { useRouter } from "next/router";
-import {
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  useContext,
-  useState,
-} from "react";
+import { DetailedHTMLProps, InputHTMLAttributes, useState } from "react";
 
 import Alert from "./Alert";
 import { CenteredLoader } from "./Loader";
@@ -20,7 +15,7 @@ import {
 } from "../createAdminRouter";
 
 import formStyles from "./form.module.css";
-import { AutoAdminContext } from "./AutoAdminContext";
+import { useAutoAdminContext } from "./AutoAdminContext";
 import { normalizeQueryParam } from "../util";
 
 export function formatTitle(field: FieldSchema) {
@@ -249,9 +244,7 @@ export default function Form<T extends Record<string, any>>(props: {
   const uuid = props.id ?? normalizeQueryParam(router.query["uuid"])!;
 
   const isCreate = uuid == "new";
-  const trpc = useContext(AutoAdminContext);
-  if (!trpc)
-    throw new Error("Please wrap the component in AutoAdminContext.Provider");
+  const trpc = useAutoAdminContext();
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string>();
 

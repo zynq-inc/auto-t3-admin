@@ -1,18 +1,16 @@
 import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 
 import Search from "./Search";
 import Table, { parseSort } from "./Table";
 import { normalizeQueryParam } from "../util";
-import { AutoAdminContext } from "./AutoAdminContext";
+import { useAutoAdminContext } from "./AutoAdminContext";
 
 export default function SearchTable(props: {
   resourceName?: string;
   page?: number;
 }) {
-  const trpc = useContext(AutoAdminContext);
-  if (!trpc)
-    throw new Error("Please wrap the component in AutoAdminContext.Provider");
+  const trpc = useAutoAdminContext();
 
   const router = useRouter();
   const resourceName =
