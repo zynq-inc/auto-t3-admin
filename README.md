@@ -9,6 +9,25 @@ npm install zynq-inc/auto-t3-admin
 yarn add auto-t3-admin@zynq-inc/auto-t3-admin
 ```
 
+See [below](#usage) for basic usage docs.
+
+# Features:
+- Automatically browse all of your data
+- Magically search ~all~ most fields
+- Sort by (multiple) column
+- View, edit, create and delete records in your DB 
+- Use NextJS routing for your admin pages
+- Add extra custom components if you want
+- Somewhat mobile-usable
+
+## Screenshots
+
+### Table
+![image](https://github.com/zynq-inc/auto-t3-admin/assets/2154522/aa7b0f02-e08d-471d-98da-9580538aed93)
+
+### Row Edit
+![image](https://github.com/zynq-inc/auto-t3-admin/assets/2154522/74a162ac-0c19-4a06-a15f-2d60e9210819)
+
 # Usage
 
 First, add a trpc router that will expose all your prisma models to your admin frontend. Use a admin-only protected procedure!!!
