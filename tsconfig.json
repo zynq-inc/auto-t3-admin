@@ -12,5 +12,6 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./"
   },
-  "files": ["./src/index.ts"]
+  "files": ["./src/index.ts"],
+  "include": ["./typings.d.ts"]
 }

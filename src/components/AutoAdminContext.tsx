@@ -1,8 +1,7 @@
-import { CreateTRPCNext } from "@trpc/next";
+import type { createTRPCNext } from "@trpc/next";
 import { AnyRootConfig, CreateRouterInner, RootConfig } from "@trpc/server";
 import { createContext, useContext } from "react";
 import { createAdminRouter } from "../createAdminRouter";
-import { NextPageContext } from "next";
 
 type AdminRouter<Config extends AnyRootConfig> = CreateRouterInner<
   Config,
@@ -17,7 +16,7 @@ type AdminRouter<Config extends AnyRootConfig> = CreateRouterInner<
 type TRPCRouter<
   Config extends AnyRootConfig,
   TRouter extends AdminRouter<Config> = AdminRouter<Config>
-> = CreateTRPCNext<TRouter, NextPageContext, null>;
+> = Awaited<ReturnType<typeof createTRPCNext<TRouter>>>;
 
 const AutoAdminContextInternal = createContext<any>(null);
 

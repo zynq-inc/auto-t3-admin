@@ -16,8 +16,11 @@ import {
 
 import formStyles from "./form.module.css";
 import { useAutoAdminContext } from "./AutoAdminContext";
-import { normalizeQueryParam } from "../util";
+import { getBaseURI, normalizeQueryParam } from "../util";
 
+// TODO: if there are multiple capitalized letters in a row, then check if there's a following lowercase.
+// - if yes, then combine the uppercase letters into one word, minus the last one
+// - if no, combine all the uppercase letters into one word
 export function formatTitle(field: FieldSchema) {
   const remapID = field.name.replace(/ID/g, "Id");
   const result = remapID.replace(/([A-Z])/g, " $1");
@@ -89,6 +92,7 @@ function DataInput(props: {
   onChange: (v: unknown) => void;
   disabled: boolean;
 }) {
+  const baseURI = getBaseURI();
   const commonProps = {
     disabled:
       props.disabled ||
@@ -140,7 +144,7 @@ function DataInput(props: {
               className={formStyles["view-reference"]}
               aria-disabled
               target="_blank"
-              href={`/secret-admin/resources/${idField.type}/${props.data}`}
+              href={`${baseURI}/resources/${idField.type}/${props.data}`}
             >
               <ExternalLinkIcon />
               VIEW
@@ -221,23 +225,12 @@ function mapObject<T, U>(obj: Record<string, T>, map: (k: string, t: T) => U) {
 export default function Form<T extends Record<string, any>>(props: {
   formValue?: T | undefined;
   setFormValue?: (t: T) => void;
-  schema?: FullSchema<string>;
-  getQuery?: UseTRPCQueryResult<{ results: T[] }, unknown>;
-  onUpdate?: (params: {
-    table: string;
-    where: { id: string };
-    data: Partial<T>;
-  }) => Promise<{ count: number }>;
-  onDelete?: (params: {
-    table: string;
-    where: { id: string };
-  }) => Promise<{ count: number }>;
-  onCreate?: (params: { table: string; data: T }) => Promise<T>;
   resourceName?: string;
   id?: "new" | string; // "new" when creating new record
   loading?: boolean;
 }) {
   const router = useRouter();
+  const baseURI = getBaseURI();
 
   const resourceName =
     props.resourceName ?? normalizeQueryParam(router.query["resource"])!;
@@ -253,11 +246,10 @@ export default function Form<T extends Record<string, any>>(props: {
   const formValue = props.formValue ?? formValueInner;
   const setFormValue = props.setFormValue ?? setFormValueInner;
 
-  const internalGetSchema = trpc.autoAdmin.getSchema.useQuery(undefined, {
-    enabled: !props.schema,
-  });
+  const getSchema = trpc.autoAdmin.getSchema.useQuery();
+  const fullSchema = getSchema?.data;
 
-  const internalGetQuery = trpc.autoAdmin.getResource.useQuery(
+  const list = trpc.autoAdmin.getResource.useQuery(
     { table: resourceName, where: { id: uuid } },
     {
       onSuccess(res) {
@@ -268,25 +260,19 @@ export default function Form<T extends Record<string, any>>(props: {
           ) as T
         );
       },
-      enabled: !isCreate && !!uuid && !!resourceName && !props.getQuery,
+      enabled: !isCreate && !!uuid && !!resourceName,
     }
   );
 
-  const internalUpdateMutation = trpc.autoAdmin.updateResource.useMutation();
-  const internalDeleteMutation = trpc.autoAdmin.deleteResource.useMutation();
-  const internalCreateMutation = trpc.autoAdmin.createResource.useMutation();
-
-  const list = props.getQuery ?? internalGetQuery;
-  const fullSchema = props.schema ?? internalGetSchema.data;
-  const updateMutation = props.onUpdate ?? internalUpdateMutation.mutateAsync;
-  const deleteMutation = props.onDelete ?? internalDeleteMutation.mutateAsync;
-  const createMutation = props.onCreate ?? internalCreateMutation.mutateAsync;
+  const updateMutation = trpc.autoAdmin.updateResource.useMutation();
+  const deleteMutation = trpc.autoAdmin.deleteResource.useMutation();
+  const createMutation = trpc.autoAdmin.createResource.useMutation();
 
   const mutationIsLoading =
     props.loading ||
-    internalUpdateMutation.isLoading ||
-    internalCreateMutation.isLoading ||
-    internalDeleteMutation.isLoading;
+    updateMutation.isLoading ||
+    createMutation.isLoading ||
+    deleteMutation.isLoading;
 
   if ((!isCreate && !list.data) || !fullSchema) {
     return <CenteredLoader />;
@@ -338,19 +324,19 @@ export default function Form<T extends Record<string, any>>(props: {
           <button
             disabled={!formValue || mutationIsLoading}
             aria-loading={mutationIsLoading}
-            className={`primary ${buttonStyles["base"]}`}
+            className={`${buttonStyles["base"]}`}
             onClick={() => {
               if (!formValue) {
                 return alert("Failsafe: Can't create with no data");
               }
-              internalCreateMutation
+              createMutation
                 .mutateAsync({
                   table: resourceName,
                   data: formValue,
                 })
                 .then((res) =>
                   router.replace(
-                    `/secret-admin/resources/${resourceName}/${res["id"]}`
+                    `${baseURI}/resources/${resourceName}/${res["id"]}`
                   )
                 )
                 .catch((e) => setError(e.message));
@@ -367,7 +353,7 @@ export default function Form<T extends Record<string, any>>(props: {
               mutationIsLoading
             }
             aria-loading={mutationIsLoading}
-            className={`primary ${buttonStyles["base"]}`}
+            className={`${buttonStyles["base"]}`}
             onClick={() => {
               if (!uuid) {
                 return alert("Failsafe: Can't edit with no ID");
@@ -375,14 +361,15 @@ export default function Form<T extends Record<string, any>>(props: {
               if (!formValue) {
                 return alert("Failsafe: Can't update with no data");
               }
-              updateMutation({
-                table: resourceName,
-                where: { id: uuid },
-                data: filterObject(
-                  formValue,
-                  (k) => !!touched[k]
-                ) as Partial<T>,
-              })
+              updateMutation
+                .mutateAsync({
+                  table: resourceName,
+                  where: { id: uuid },
+                  data: filterObject(
+                    formValue,
+                    (k) => !!touched[k]
+                  ) as Partial<T>,
+                })
                 .then(() => {
                   setTouched({});
                   setError(undefined);
@@ -402,10 +389,11 @@ export default function Form<T extends Record<string, any>>(props: {
               if (!uuid) {
                 return alert("Failsafe: Can't delete with no ID");
               }
-              deleteMutation({
-                table: resourceName,
-                where: { id: uuid },
-              })
+              deleteMutation
+                .mutateAsync({
+                  table: resourceName,
+                  where: { id: uuid },
+                })
                 .then(() => {
                   router.back();
                 })
