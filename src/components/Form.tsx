@@ -53,6 +53,7 @@ function getDefaultValue(type: string, enums: EnumSchema[]) {
 }
 
 function MaybeNullableDataInput(props: {
+  isCreate: boolean;
   model: ModelSchema;
   enums: EnumSchema[];
   field: FieldSchema;
@@ -78,12 +79,31 @@ function MaybeNullableDataInput(props: {
           NULL
         </label>
       )}
+      {props.field.isRequired &&
+        props.field.hasDefaultValue &&
+        props.isCreate &&
+        !props.field.isId && (
+          <label className={formStyles["nullable-label"]}>
+            <input
+              type="checkbox"
+              className={formStyles["nullable-checkbox"]}
+              checked={props.data == null}
+              onChange={(e) => {
+                props.onChange(
+                  e.currentTarget.checked
+                    ? null
+                    : getDefaultValue(props.field.type, props.enums)
+                );
+              }}
+            />
+            DEFAULT
+          </label>
+        )}
       <DataInput {...props} disabled={props.data == null} />
     </div>
   );
 }
 
-// TODO handle nullability by adding a checkbox for fields with isRequired: false in the schema
 function DataInput(props: {
   model: ModelSchema;
   enums: EnumSchema[];
@@ -94,9 +114,7 @@ function DataInput(props: {
 }) {
   const { basePath } = useAutoAdminContext();
   const commonProps = {
-    disabled:
-      props.disabled ||
-      ["id", "createdAt", "updatedAt"].includes(props.field.name),
+    disabled: props.disabled || props.field.isUpdatedAt || props.field.isId,
     className: formStyles["common-input"],
 
     value: (props.data && (props.data as any).toString()) ?? "",
@@ -303,6 +321,7 @@ export default function Form<T extends Record<string, any>>(props: {
           <li className={formStyles["entry"]} key={f.name}>
             {formatTitle(f)}{" "}
             <MaybeNullableDataInput
+              isCreate={isCreate}
               model={modelSchema}
               enums={enums}
               field={f}

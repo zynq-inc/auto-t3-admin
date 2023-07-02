@@ -80,14 +80,11 @@ type PrismaInstance<UNCAP_MODEL_NAMES_UNION extends string> = {
   };
 };
 
-// ProcedureBuilder<{
-//   _config: TConfig;
-//   _ctx_out: TConfig['$types']['ctx'];
-//   _input_in: UnsetMarker;
-//   _input_out: UnsetMarker;
-//   _output_in: UnsetMarker;
-//   _output_out: UnsetMarker;
-//   _meta: TConfig['$types']['meta']
+// We need to reduce the values to plain JSON so that
+// supertype doesn't do anything in case someone uses it
+function serializeRoundtrip(v: unknown) {
+  return JSON.parse(JSON.stringify(v));
+}
 
 export async function createAdminRouter<
   const MODEL_NAMES_UNION extends string,
@@ -106,12 +103,10 @@ export async function createAdminRouter<
   DB: PrismaInstance<Uncapitalize<MODEL_NAMES_UNION>>
 ) {
   const DMMF = await (DB as any)._getDmmf();
-  const SCHEMA: FullSchema<string> = JSON.parse(
-    JSON.stringify({
-      models: DMMF.modelMap,
-      enums: DMMF.datamodel.enums,
-    })
-  );
+  const SCHEMA: FullSchema<string> = serializeRoundtrip({
+    models: DMMF.modelMap,
+    enums: DMMF.datamodel.enums,
+  });
 
   function uncapitalizeTable(name: string) {
     const uncapitalizedTableName = (name[0]?.toLowerCase() +
@@ -152,7 +147,10 @@ export async function createAdminRouter<
           }),
         ]);
         return {
-          results: results as { id: string; [k: string]: JSON }[],
+          results: serializeRoundtrip(results) as {
+            id: string;
+            [k: string]: JSON;
+          }[],
           numPages: Math.ceil(count / req.input.pagination.perPage),
         };
       }),
@@ -178,9 +176,10 @@ export async function createAdminRouter<
         })
       )
       .mutation(async (req) => {
-        return DB[uncapitalizeTable(req.input.table)].create({
+        const result = (await DB[uncapitalizeTable(req.input.table)].create({
           data: req.input.data,
-        }) as Promise<{ [k: string]: unknown; id: string }>;
+        })) as Promise<{ [k: string]: unknown; id: string }>;
+        return serializeRoundtrip(result);
       }),
     deleteResource: adminProcedure
       .input(
