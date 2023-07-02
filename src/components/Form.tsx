@@ -16,7 +16,7 @@ import {
 
 import formStyles from "./form.module.css";
 import { useAutoAdminContext } from "./AutoAdminContext";
-import { getBaseURI, normalizeQueryParam } from "../util";
+import { normalizeQueryParam } from "../util";
 
 // TODO: if there are multiple capitalized letters in a row, then check if there's a following lowercase.
 // - if yes, then combine the uppercase letters into one word, minus the last one
@@ -92,7 +92,7 @@ function DataInput(props: {
   onChange: (v: unknown) => void;
   disabled: boolean;
 }) {
-  const baseURI = getBaseURI();
+  const { basePath } = useAutoAdminContext();
   const commonProps = {
     disabled:
       props.disabled ||
@@ -144,7 +144,7 @@ function DataInput(props: {
               className={formStyles["view-reference"]}
               aria-disabled
               target="_blank"
-              href={`${baseURI}/resources/${idField.type}/${props.data}`}
+              href={`${basePath}/resources/${idField.type}/${props.data}`}
             >
               <ExternalLinkIcon />
               VIEW
@@ -230,14 +230,13 @@ export default function Form<T extends Record<string, any>>(props: {
   loading?: boolean;
 }) {
   const router = useRouter();
-  const baseURI = getBaseURI();
 
   const resourceName =
     props.resourceName ?? normalizeQueryParam(router.query["resource"])!;
   const uuid = props.id ?? normalizeQueryParam(router.query["uuid"])!;
 
   const isCreate = uuid == "new";
-  const trpc = useAutoAdminContext();
+  const { trpc, basePath } = useAutoAdminContext();
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string>();
 
@@ -323,7 +322,7 @@ export default function Form<T extends Record<string, any>>(props: {
         {isCreate && (
           <button
             disabled={!formValue || mutationIsLoading}
-            aria-loading={mutationIsLoading}
+            data-loading={mutationIsLoading}
             className={`${buttonStyles["base"]}`}
             onClick={() => {
               if (!formValue) {
@@ -336,7 +335,7 @@ export default function Form<T extends Record<string, any>>(props: {
                 })
                 .then((res) =>
                   router.replace(
-                    `${baseURI}/resources/${resourceName}/${res["id"]}`
+                    `${basePath}/resources/${resourceName}/${res["id"]}`
                   )
                 )
                 .catch((e) => setError(e.message));
@@ -352,7 +351,7 @@ export default function Form<T extends Record<string, any>>(props: {
               Object.values(touched).length == 0 ||
               mutationIsLoading
             }
-            aria-loading={mutationIsLoading}
+            data-loading={mutationIsLoading}
             className={`${buttonStyles["base"]}`}
             onClick={() => {
               if (!uuid) {
@@ -383,7 +382,7 @@ export default function Form<T extends Record<string, any>>(props: {
         {!isCreate && (
           <button
             disabled={mutationIsLoading}
-            aria-loading={mutationIsLoading}
+            data-loading={mutationIsLoading}
             className={`error ${buttonStyles["base"]}`}
             onClick={() => {
               if (!uuid) {

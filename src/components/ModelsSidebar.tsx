@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { HamburgerMenuIcon, Cross2Icon } from "@radix-ui/react-icons";
 
 import { CenteredLoader } from "./Loader";
-import { getBaseURI, normalizeQueryParam } from "../util";
+import { normalizeQueryParam } from "../util";
 
 import buttonStyles from "./Button.module.css";
 
@@ -35,7 +35,7 @@ export function useWindowSize() {
 
 export default function ModelsSidebar({}) {
   const router = useRouter();
-  const trpc = useAutoAdminContext();
+  const { trpc, basePath } = useAutoAdminContext();
 
   const resourceName = normalizeQueryParam(router.query["resource"]) ?? "";
   const schema = trpc.autoAdmin.getSchema.useQuery();
@@ -45,8 +45,6 @@ export default function ModelsSidebar({}) {
   const [expanded, setExpanded] = useState(false);
 
   const isLargeScreen = width > 1500;
-
-  const baseURI = getBaseURI();
 
   if (!schema.data) {
     return <CenteredLoader />;
@@ -71,7 +69,7 @@ export default function ModelsSidebar({}) {
           {Object.values(schema.data.models).map((e) => (
             <Link
               key={e.name}
-              href={`${baseURI}/resources/${e.name}`}
+              href={`${basePath}/resources/${e.name}`}
               className={`${styles["item"]}`}
               aria-current={
                 resourceName

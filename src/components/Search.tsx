@@ -75,7 +75,7 @@ export default function Search(props: {
   setWhereClause: (whereClause: Record<string, unknown> | undefined) => void;
   additionalSearchClauses?: (query: string) => Record<string, unknown>[];
 }) {
-  const trpc = useAutoAdminContext();
+  const { trpc } = useAutoAdminContext();
 
   const schemaQuery = trpc.autoAdmin.getSchema.useQuery();
   const fullSchema = schemaQuery.data;

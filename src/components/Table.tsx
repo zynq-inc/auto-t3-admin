@@ -113,7 +113,7 @@ export default function Table<T extends Record<string, unknown>>(props: {
   data: { numPages: number; results: T[] } | undefined;
   addedFields?: { name: string; display: (row: T) => React.ReactNode }[];
 }) {
-  const trpc = useAutoAdminContext();
+  const { trpc, basePath } = useAutoAdminContext();
 
   const router = useRouter();
   const schemaQuery = trpc.autoAdmin.getSchema.useQuery();

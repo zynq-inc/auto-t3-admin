@@ -18,26 +18,8 @@ type TRPCRouter<
   TRouter extends AdminRouter<Config> = AdminRouter<Config>
 > = Awaited<ReturnType<typeof createTRPCNext<TRouter>>>;
 
-const AutoAdminContextInternal = createContext<any>(null);
-
-export function AutoAdminContextProvider<
-  const Config extends AnyRootConfig,
-  const TRouter extends AdminRouter<Config>
->(props: { children: React.ReactNode; value: TRPCRouter<Config, TRouter> }) {
-  return (
-    <AutoAdminContextInternal.Provider value={props.value}>
-      {props.children}
-    </AutoAdminContextInternal.Provider>
-  );
-}
-
-export function useAutoAdminContext() {
-  const ctx = useContext(AutoAdminContextInternal);
-  if (!ctx)
-    throw new Error(
-      "Please wrap all auto-t3-admin pages in AutoAdminContextProvider"
-    );
-  return ctx as TRPCRouter<
+type InnerContextType = {
+  trpc: TRPCRouter<
     RootConfig<{
       ctx: any;
       meta: any;
@@ -45,4 +27,36 @@ export function useAutoAdminContext() {
       transformer: { _default: false };
     }>
   >;
+  basePath: string;
+};
+
+const AutoAdminContextInternal = createContext<InnerContextType | null>(null);
+
+export function AutoAdminContextProvider<
+  const Config extends AnyRootConfig,
+  const TRouter extends AdminRouter<Config>
+>(props: {
+  children: React.ReactNode;
+  trpc: TRPCRouter<Config, TRouter>;
+  basePath?: string;
+}) {
+  return (
+    <AutoAdminContextInternal.Provider
+      value={{
+        trpc: props.trpc as any,
+        basePath: props.basePath ?? "/admin",
+      }}
+    >
+      {props.children}
+    </AutoAdminContextInternal.Provider>
+  );
+}
+
+export function useAutoAdminContext(): InnerContextType {
+  const ctx = useContext(AutoAdminContextInternal);
+  if (!ctx)
+    throw new Error(
+      "Please wrap all auto-t3-admin pages in AutoAdminContextProvider"
+    );
+  return ctx;
 }

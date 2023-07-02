@@ -10,7 +10,7 @@ export default function SearchTable(props: {
   resourceName?: string;
   page?: number;
 }) {
-  const trpc = useAutoAdminContext();
+  const { trpc } = useAutoAdminContext();
 
   const router = useRouter();
   const resourceName =

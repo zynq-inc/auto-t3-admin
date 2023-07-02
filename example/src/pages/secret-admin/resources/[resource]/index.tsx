@@ -7,7 +7,7 @@ import { api } from "~/utils/api";
 
 export default function Index({}) {
   return (
-    <AutoAdminContextProvider value={api}>
+    <AutoAdminContextProvider trpc={api} basePath="/secret-admin">
       <div style={{ display: "flex" }}>
         <ModelsSidebar />
         <SearchTable />
