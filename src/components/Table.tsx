@@ -3,30 +3,36 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { CenteredLoader } from "./Loader";
-import { normalizeQueryParam } from "../util";
+import { isForeignKeyIDField, normalizeQueryParam } from "../util";
 
-import { FieldSchema, ModelSchema } from "../createAdminRouter";
+import { FieldSchema, FullSchema, ModelSchema } from "../createAdminRouter";
 import { formatTitle } from "./Form";
 import styles from "./Table.module.css";
 import { useAutoAdminContext } from "./AutoAdminContext";
 
-function displayData(model: ModelSchema, field: FieldSchema, val: unknown) {
-  if (field.name == "id") {
+function displayData(
+  model: ModelSchema,
+  field: FieldSchema,
+  fullSchema: FullSchema,
+  val: unknown
+) {
+  if (field.isId) {
     return <>{(val as any).toString().split("-")[0]}</>;
   }
 
-  if (field.name.toUpperCase().endsWith("ID")) {
-    const relation = model.fields.find((f) =>
-      f.relationFromFields?.includes(field.name)
+  const foreignKeyIDField = isForeignKeyIDField(
+    field,
+    model,
+    fullSchema.models
+  );
+  if (foreignKeyIDField && val) {
+    return (
+      <Link href={`./${foreignKeyIDField.modelName}/${val.toString()}`}>
+        {val.toString().split("-")[0]}
+      </Link>
     );
-    if (relation && val) {
-      return (
-        <Link href={`./${relation.type}/${val.toString()}`}>
-          {val.toString().split("-")[0]}
-        </Link>
-      );
-    }
   }
+
   if (val == null) {
     return <span style={{ color: "lightgrey" }}>NULL</span>;
   }
@@ -207,7 +213,7 @@ export default function Table<T extends Record<string, unknown>>(props: {
               </td>
               {scalarFields.map((f) => (
                 <td key={f.name} className={styles["cell"]}>
-                  {displayData(modelSchema, f, row[f.name])}
+                  {displayData(modelSchema, f, fullSchema, row[f.name])}
                 </td>
               ))}
               {props.addedFields &&

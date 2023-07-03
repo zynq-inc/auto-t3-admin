@@ -1,8 +1,14 @@
 import { ChangeEvent, useCallback } from "react";
 
-import { EnumSchema, FieldSchema, ModelSchema } from "../createAdminRouter";
+import {
+  DBEngineType,
+  FieldSchema,
+  FullSchema,
+  ModelSchema,
+} from "../createAdminRouter";
 import styles from "./Search.module.css";
 import { useAutoAdminContext } from "./AutoAdminContext";
+import { isForeignKeyIDField } from "src/util";
 
 const isInt = new RegExp(/^-?\d*$/);
 const isFloat = new RegExp(/^-?\d*\.?\d*$/);
@@ -12,19 +18,36 @@ const isUUIDV4 = new RegExp(
 
 function getTypedWhereValue(
   query: string,
+  dbEngineType: DBEngineType,
   field: FieldSchema,
-  enums: EnumSchema[]
+  model: ModelSchema,
+  fullSchema: FullSchema
 ) {
-  if (field.type == "String" && field.name.toUpperCase().endsWith("ID")) {
-    if (query.match(isUUIDV4)) {
-      return [query];
-    } else {
-      return [];
+  const foreignKeyIDField = isForeignKeyIDField(
+    field,
+    model,
+    fullSchema.models
+  );
+  if (foreignKeyIDField) {
+    switch (foreignKeyIDField.idType) {
+      case "cuid":
+        return [query];
+      case "uuid":
+        if (query.match(isUUIDV4)) {
+          return [query];
+        } else {
+          return [];
+        }
+      case "int": {
+        if (!query.match(isInt)) return [];
+        const i = parseInt(query);
+        return isNaN(i) ? [] : [i];
+      }
     }
   }
 
   if (field.kind == "enum") {
-    const enumSchema = enums.find((e) => e.name == field.type);
+    const enumSchema = fullSchema.enums.find((e) => e.name == field.type);
     if (enumSchema) {
       const matchingEnumValues = enumSchema.values.filter((v) =>
         v.name.toUpperCase().includes(query.toUpperCase())
@@ -35,7 +58,12 @@ function getTypedWhereValue(
 
   switch (field.type) {
     case "String": {
-      return [{ contains: query, mode: "insensitive" }];
+      return [
+        {
+          contains: query,
+          mode: dbEngineType == "mysql" ? "insensitive" : undefined,
+        },
+      ];
     }
     case "Int": {
       if (!query.match(isInt)) return [];
@@ -54,15 +82,23 @@ function getTypedWhereValue(
 
 function createWhereClause(
   query: string,
-  schema: ModelSchema,
-  enums: EnumSchema[],
+  modelSchema: ModelSchema,
+  fullSchema: FullSchema,
   additionalSearchClauses?: (query: string) => Record<string, unknown>[]
 ): Record<string, unknown> | undefined {
   return query.length
     ? {
         OR: [
-          ...schema.fields.flatMap((f) =>
-            getTypedWhereValue(query, f, enums).map((v) => ({ [f.name]: v }))
+          ...modelSchema.fields.flatMap((f) =>
+            getTypedWhereValue(
+              query,
+              fullSchema.dbEngineType,
+              f,
+              modelSchema,
+              fullSchema
+            ).map((v) => ({
+              [f.name]: v,
+            }))
           ),
           ...(additionalSearchClauses?.(query) ?? []),
         ],
@@ -104,7 +140,7 @@ export default function Search(props: {
         const clause = createWhereClause(
           e.currentTarget["searchInput"].value,
           modelSchema!,
-          enumSchemas ?? [],
+          fullSchema!,
           props.additionalSearchClauses
         );
         props.setWhereClause(clause);
@@ -113,7 +149,7 @@ export default function Search(props: {
       <button
         type="submit"
         className={styles["search-button"]}
-        disabled={!modelSchema}
+        disabled={!fullSchema}
       />
       <input
         disabled={!modelSchema}

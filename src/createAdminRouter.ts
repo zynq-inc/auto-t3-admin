@@ -11,7 +11,9 @@ export type JSON =
   | JSON[]
   | { [key: string]: JSON };
 
-export interface FieldSchema {
+type FieldDefaultScalar = string | number | boolean;
+
+export type FieldSchema = {
   kind: "scalar" | "object" | "enum" | "unsupported";
   name: string;
   isRequired: boolean;
@@ -39,9 +41,16 @@ export interface FieldSchema {
   relationOnDelete?: string;
   relationName?: string;
   documentation?: string;
-}
+  default?:
+    | {
+        name: string;
+        args: any[];
+      }
+    | FieldDefaultScalar
+    | FieldDefaultScalar[];
+};
 
-export interface ModelSchema {
+export type ModelSchema = {
   name: string;
   dbName: string | null;
   fields: FieldSchema[];
@@ -49,18 +58,30 @@ export interface ModelSchema {
   uniqueIndexes: DMMF.uniqueIndex[];
   documentation?: string;
   primaryKey: DMMF.PrimaryKey | null;
-}
+};
 
-export interface EnumSchema {
+export type EnumSchema = {
   name: string;
   dbName: string | null;
   values: { name: string; dbName: string | null }[];
-}
+};
 
-export interface FullSchema<MODEL_NAMES extends string> {
+// https://github.com/prisma/prisma/blob/ce6b54a9f77f966062f57870bd5f12d9941c9b88/packages/generator-helper/src/types.ts#L55
+export type DBEngineType =
+  | "mysql"
+  | "mongodb"
+  | "sqlite"
+  | "postgresql"
+  | "postgres" // yep
+  | "sqlserver"
+  | "cockroachdb";
+
+export type FullSchema<MODEL_NAMES extends string = string> = {
+  dbEngineType: DBEngineType;
+
   models: Record<MODEL_NAMES, ModelSchema>;
   enums: EnumSchema[];
-}
+};
 
 const pagination = z
   .object({
@@ -104,6 +125,7 @@ export async function createAdminRouter<
 ) {
   const DMMF = await (DB as any)._getDmmf();
   const SCHEMA: FullSchema<string> = serializeRoundtrip({
+    dbEngineType: (DB as any)._engineConfig.activeProvider,
     models: DMMF.modelMap,
     enums: DMMF.datamodel.enums,
   });
