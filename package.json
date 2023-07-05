@@ -33,7 +33,7 @@
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "@prisma/client": "4.12.0",
+    "@prisma/client": "^4.12.0",
     "@trpc/client": "^10",
     "@trpc/next": "^10",
     "@trpc/react-query": "^10",
